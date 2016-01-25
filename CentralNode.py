@@ -327,3 +327,5 @@ class CentralNode(object):
 
 if __name__=="main":
     c_node = CentralNode()
+    while True:
+        pass
