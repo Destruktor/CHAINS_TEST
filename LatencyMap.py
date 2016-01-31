@@ -9,7 +9,7 @@ class LatencyMap(object):
     def __init__(self):
         self._table_lock = Lock()
         self._latency_table = dict()
-        self._node_mapping = dict()
+        self._node_mapping = dict() # Node mapping should be passed in
 
     def generate_node_mapping(self, node_hostnames, output_to_file=False):
         for count, nodeA in enumerate(node_hostnames):
@@ -35,7 +35,8 @@ class LatencyMap(object):
         target_ip = self._node_mapping[target_node_id]
         temp_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         response_received = False
-        measurement_node_ips = '5' + ''.join([socket.inet_aton(socket.gethostbyname(self._node_mapping[x])) for x in measurement_nodes])
+        measurement_node_ips = '5' + ''.join([socket.inet_aton(socket.gethostbyname(self._node_mapping[x]))
+                                              for x in measurement_nodes])
         while not response_received:
             lat_data = ''
             try:

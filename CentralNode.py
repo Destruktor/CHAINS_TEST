@@ -29,7 +29,7 @@ class CentralNode(object):
         self.node_manager = NodeManager()
         self._table = dict()
         self._table_lock = Lock()
-
+        self._latency_map = LatencyMap()
         #dict to store test data
         self._time_data_final = dict()
 
@@ -48,12 +48,12 @@ class CentralNode(object):
         t_server.start()
 
     def _init_session(self, broadcast_node_id, destination_node_ids):
-        #create time data structure
+        # create time data structure
         self._time_data_final[broadcast_node_id] = dict()
         for node in destination_node_ids:
             self._time_data_final[broadcast_node_id][node] = []
 
-        #get node latency data
+        # get node latency data
 
         f = open('./kshort/latency_file', 'r')
         latency_data = f.read()
