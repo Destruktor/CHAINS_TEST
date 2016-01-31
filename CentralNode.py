@@ -9,6 +9,8 @@ import re
 import sys
 import xml.etree.cElementTree as et
 from NodeManager import NodeManager
+from LatencyMap import LatencyMap
+
 
 #Central Node acts as the hub for session requests as well as
 #  data collection
@@ -325,7 +327,7 @@ class CentralNode(object):
             print xml_table
             s.sendto('0' + xml_table, (key, PORT))
 
-if __name__=="main":
+if __name__ == "__main__":
     c_node = CentralNode()
     while True:
         pass
