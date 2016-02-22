@@ -16,13 +16,13 @@ class OverlayConfigError(Exception):
         return repr(self.value)
 
 
-class Node(object):
+class OverlayNode(object):
     _valid_ip_regex = "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$"
     _valid_hostname_regex = "^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$"
 
     def __init__(self, node):
-        self._id = node[0]
-        self._hostname = node[0]
+        self.id = node[0]
+        self.hostname = node[1]
         self._active = True
 
 
@@ -39,7 +39,7 @@ class NodeManager(object):
         nodes = [(node['node_id'], node['hostname']) for node in
                           self._api_server.GetNodes(self._auth, node_ids, ['node_id', 'hostname', 'boot_state']) if
                           (node['boot_state'] == 'boot')]
-        available_nodes = set([Node(x) for x in nodes])
+        available_nodes = set([OverlayNode(x) for x in nodes])
         return available_nodes
 
     def get_experiment_nodes(self, num_source_nodes, num_overlay_nodes, randomized=False):
@@ -52,6 +52,17 @@ class NodeManager(object):
             experiment_nodes['source_nodes'] = experiment_nodes['overlay_nodes'][:num_source_nodes]
         return experiment_nodes
 
+    def get_node_addr_by_id(self, node_id):
+        host = self.get_node_hostname_by_id(node_id)
+        if host:
+            return socket.gethostbyname(host)
+        return None
+
+    def get_node_hostname_by_id(self, node_id):
+        for node in self._available_nodes:
+            if node.id == node_id:
+                return node.hostname
+        return None
 
 class NodeMap(object):
 
@@ -61,7 +72,7 @@ class NodeMap(object):
     def set_mapping(self, list_of_nodes):
         next_node_id = 1
         for url in list_of_nodes:
-            self._mapping[next_node_id] = Node(url)
+            self._mapping[next_node_id] = OverlayNode(url)
 
 
 class Experiment(object):

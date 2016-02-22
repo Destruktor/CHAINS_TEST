@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import logging
 import subprocess
 import socket
 import struct
@@ -9,7 +10,11 @@ import re
 import sys
 import xml.etree.cElementTree as et
 from NodeManager import NodeManager
+from NodeManager import NodeMap
 from LatencyMap import LatencyMap
+from MulticastForwardingTable import Chains
+from MulticastForwardingTable import MulticastForwardingTable
+from NodeServer import NodeServer
 
 
 #Central Node acts as the hub for session requests as well as
@@ -24,11 +29,14 @@ from LatencyMap import LatencyMap
 class CentralNode(object):
     _NUM_PROCESSING_THREADS = 25
     _HOST = ''
-    _PORT = 50006
+    PORT = 50006
 
     def __init__(self):
-        self._node_mapping = dict()
-        self.node_manager = NodeManager()
+        logger_format = '%(asctime)-15s:: %(message)s'
+        logging.basicConfig(format=logger_format, filename="./logs/central_node")
+        self._logger = logging.getLogger("CentralNode")
+        self._node_mapping = NodeMap()
+        self._node_manager = NodeManager()
         self._table = dict()
         self._table_lock = Lock()
         self._latency_map = LatencyMap()
@@ -49,59 +57,35 @@ class CentralNode(object):
         t_server.setDaemon(True)
         t_server.start()
 
-    def _init_session(self, broadcast_node_id, destination_node_ids):
+    def _init_session(self, broadcast_node_id, destination_node_ids, latency_map):
         # create time data structure
         self._time_data_final[broadcast_node_id] = dict()
-        for node in destination_node_ids:
-            self._time_data_final[broadcast_node_id][node] = []
+        for node_id in destination_node_ids:
+            self._time_data_final[broadcast_node_id][node_id] = []
 
         # get node latency data
+        if not self._latency_map.isValid():
+            self._logger.info("Generating Latency Map for %s nodes", (len(destination_node_ids)+1,) )
+            self._latency_map.generate_latency_map()
 
-        f = open('./kshort/latency_file', 'r')
-        latency_data = f.read()
-        f.close()
-
-        #get node mapping
-        #node_mapping = dict()
-        nm_f = open('./node_mapping', 'r')
-        node_count = 0
-        for line in nm_f:
-            node_count += 1
-            node_num = int(re.search('^(\d+)', line).group(0))
-            print node_num
-            node_hostname = re.search('(?<=\s)(.+?)\s', line).group(0)
-            print node_hostname
-            node_ip = re.search('([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)', line).group(0)
-            print node_ip
-            node_mapping[node_num] = (node_hostname, node_ip)
-            node_mapping[node_ip] = node_num
-        print node_mapping
-        nm_f.close()
-
-        arc_count = 0
-        for line in latency_data.split('\n'):
-            arc_count += 1
-            #print "Count / line"
-            #print str(arc_count) + " / " + line
-
-        n = node_count
+        arc_count = self._latency_map.get_arc_count()
+        n = len(destination_node_ids)+1
         m = arc_count - 1
 
-        destinations = [node_mapping[x] for x in destination_node_ids]
+        file_name = Chains.write_chains_input_file(n, m, broadcast_node_id, destination_node_ids, latency_map)
 
-        file_name = './kshort/graph_file' + str(node_mapping[broadcast_node_id])
-        f = open(file_name, 'w')
+        # get chains output
+        chains_output_paths = Chains.run_chains(100, n, file_name)
 
-        f.write("n %d\n"% n)
-        f.write("m %d\n"% m)
-        f.write("s %d\n"% node_mapping[broadcast_node_id])
-        f.write("t")
-        for i in destinations:
-            f.write(" %d"% i)
-        f.write("\n")
-        f.write(latency_data)
-        f.close()
-        subprocess.Popen(['./GenerateNodeTable.py', file_name, '100'])
+        # generate MFTs
+        multicast_forwarding_tables = MulticastForwardingTable.build_MFT(chains_output_paths)
+
+        # send MFTs to each overlay node
+        for node_id in destination_node_ids:
+            node_MFT = multicast_forwarding_tables[node_id]
+            self.update_node_multicast_forwarding_table(node_id, node_MFT)
+
+        # signal completion
 
     def _process_packet(self):
         global node_mapping
@@ -294,12 +278,12 @@ class CentralNode(object):
         print 'Central Node ip: ' + this_node_id
         print 'Socket Created. Initializing...'
         try:
-            s.bind((self._HOST, self._PORT))
+            s.bind((self._HOST, self.PORT))
         except socket.error, msg:
             print 'Bind failed. Error code: ' + str(msg[0]) + ', Error message : ' + msg[1]
             sys.exit();
 
-        print 'Socket bound on port: ' + str(self._PORT)
+        print 'Socket bound on port: ' + str(self.PORT)
 
         #hang out and listen for stuffs
         while 1:
@@ -309,23 +293,20 @@ class CentralNode(object):
 
             self._packet_queue.put((data, addr))
 
-    def update_node_multicast_forwarding_table(self, node, table):
-        #
-        PORT = 50007
+    def update_node_multicast_forwarding_table(self, node_id, table):
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-        for key, value in table.iteritems():
-            table = et.Element('table')
-            source_node = et.SubElement(table, 'source_node')
-            source_node.attrib['broadcast_node'] = node_mapping[1][1]
-            for pair in value:
-                temp_node = et.SubElement(source_node, "destination_node")
-                temp_node.attrib['next_hop'] = pair[1]
-                temp_node.text = pair[0]#should capture ips for each node
+        table = et.Element('table')
+        source_node = et.SubElement(table, 'source_node')
+        source_node.attrib['broadcast_node'] = node_mapping[1][1]
+        for pair in table:
+            temp_node = et.SubElement(source_node, "destination_node")
+            temp_node.attrib['next_hop'] = pair[1]
+            temp_node.text = pair[0]#should capture ips for each node
 
-            xml_table = et.tostring(table)
-            print xml_table
-            s.sendto('0' + xml_table, (key, PORT))
+        xml_table = et.tostring(table)
+        node_addr = self._node_manager.get_node_addr_by_id(node_id)
+        s.sendto('0' + xml_table, (node_addr, NodeServer.PORT))
 
 if __name__ == "__main__":
     c_node = CentralNode()

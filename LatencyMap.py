@@ -81,9 +81,8 @@ class LatencyMap(object):
         for t in threads_to_join:
             t.join()
 
-    def write_latency_graph_tofile(self, path):
-        # f = open('./kshort/latency_file', 'w')
-        f = open(path, 'w')
+    def get_formatted_latency_data(self):
+        formatted_latency_data = ''
         for nodeA, dest in self._latency_table.iteritems():
             for nodeB, values in dest.iteritems():
                 one_way_latency = values
@@ -92,10 +91,10 @@ class LatencyMap(object):
                 print("one way latency: %f" % one_way_latency)
                 one_way_str = str(one_way_latency).split('.')[0]
                 print("One way string: %s" % one_way_str)
-                f.write("a %d %d %s\n" % (nodeA, nodeB, one_way_str))
-                f.write("a %d %d %s\n" % (nodeB, nodeA, one_way_str))
+                formatted_latency_data += "a %d %d %s\n" % (nodeA, nodeB, one_way_str)
+                formatted_latency_data += "a %d %d %s\n" % (nodeB, nodeA, one_way_str)
 
-        f.close()
+        return formatted_latency_data
 
     def get_node_mapping(self):
         return self._node_mapping
@@ -105,3 +104,9 @@ class LatencyMap(object):
 
     def node_mapping_length(self):
         return len(self._node_mapping)
+
+    def get_arc_count(self):
+        arc_count = 0
+        for line in self._latency_table:
+            arc_count += 1
+        return arc_count
