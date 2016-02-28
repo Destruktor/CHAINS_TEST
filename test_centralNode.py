@@ -1,10 +1,10 @@
-from unittest import TestCase
+import unittest
 from CentralNode import CentralNode
 import socket
 __author__ = 'no295d'
 
 
-class TestCentralNode(TestCase):
+class TestCentralNode(unittest.TestCase):
     def test__init_session(self):
         self.fail()
 
@@ -29,3 +29,5 @@ class TestCentralNode(TestCase):
     def _setup_socket(self):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         return sock
+if __name__=='__main__':
+    unittest.main()
