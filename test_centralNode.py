@@ -13,7 +13,9 @@ class TestCentralNode(TestCase):
 
         sock = self._setup_socket()
 
-        sock.sendto('1', ('localhost',CentralNode.PORT))
+        sock.sendto('0', ('localhost',CentralNode.PORT))
+
+        data = sock.recv(1024)
 
 
         self.fail()
