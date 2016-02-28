@@ -104,17 +104,19 @@ class CentralNode(object):
                 # what data do we need
                 # broadcast node, set of destinations
 
-                broadcast_node_id = socket.inet_ntoa(bytes[1:5])
+                #broadcast_node_id = socket.inet_ntoa(bytes[1:5])
+                broadcast_node_id = struct.unpack('i', bytes[1:5])
                 broad_node_socket = bytes
                 destination_node_ids = []
                 temp_len = len(bytes)#will this work maybe?????
                 i = 5
                 while i < temp_len:
-                    temp_dest = socket.inet_ntoa(bytes[i:i+4])
+                    #temp_dest = socket.inet_ntoa(bytes[i:i+4])
+                    temp_dest = struct.unpack('i', bytes[i:i+4])
                     #print "Adding destination: " + temp_dest
                     destination_node_ids.append(temp_dest)
                     i += 4
-
+                self._logger.debug("Initializing multicast session for broadcast node %d" % broadcast_node_id)
                 self._init_session(broadcast_node_id, destination_node_ids)
 
                 #send confirmation of session initialization

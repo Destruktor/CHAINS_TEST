@@ -1,6 +1,7 @@
 import unittest
 from CentralNode import CentralNode
 import socket
+import struct
 __author__ = 'no295d'
 
 
@@ -13,7 +14,11 @@ class TestCentralNode(unittest.TestCase):
 
         sock = self._setup_socket()
 
-        sock.sendto('0', ('localhost',CentralNode.PORT))
+        msg = '0'
+        for i in range(10):
+            msg += struct.pack('i', i)
+
+        sock.sendto(msg, ('localhost',CentralNode.PORT))
 
         data = sock.recv(1024)
 
