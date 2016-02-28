@@ -116,7 +116,7 @@ class CentralNode(object):
                     #print "Adding destination: " + temp_dest
                     destination_node_ids.append(temp_dest)
                     i += 4
-                self._logger.debug("Initializing multicast session for broadcast node %d" % broadcast_node_id)
+                print("Initializing multicast session for broadcast node %d" % broadcast_node_id)
                 self._init_session(broadcast_node_id, destination_node_ids)
 
                 #send confirmation of session initialization
