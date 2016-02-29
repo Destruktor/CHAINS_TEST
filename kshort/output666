@@ -1,0 +1,52 @@
+Source is: 1 
+2-1--*--0--*-2-1- 	(Cost: 55) 	(Cost: 55)3-1--*--0--*-3-1- 	(Cost: 104) 	(Cost: 104)3-2-1--*--0--*-3-2-1- 	(Cost: 144) 	(Cost: 144)4-1--*--0--*-4-1- 	(Cost: 51) 	(Cost: 51)4-2-1--*--0--*-4-2-1- 	(Cost: 57) 	(Cost: 57)4-3-1--*--0--*-4-3-1- 	(Cost: 185) 	(Cost: 185)4-3-2-1--*--0--*-4-3-2-1- 	(Cost: 225) 	(Cost: 225)5-1--*--0--*-5-1- 	(Cost: 259) 	(Cost: 259)5-7-1--*--0--*-5-7-1- 	(Cost: 310) 	(Cost: 310)5-4-1--*--0--*-5-4-1- 	(Cost: 319) 	(Cost: 319)5-4-2-1--*--0--*-5-4-2-1- 	(Cost: 325) 	(Cost: 325)5-2-1--*--0--*-5-2-1- 	(Cost: 342) 	(Cost: 342)5-3-1--*--0--*-5-3-1- 	(Cost: 344) 	(Cost: 344)5-7-2-1--*--0--*-5-7-2-1- 	(Cost: 356) 	(Cost: 356)5-7-4-1--*--0--*-5-7-4-1- 	(Cost: 357) 	(Cost: 357)5-7-4-2-1--*--0--*-5-7-4-2-1- 	(Cost: 363) 	(Cost: 363)5-3-2-1--*--0--*-5-3-2-1- 	(Cost: 384) 	(Cost: 384)6-1--*--0--*-6-1- 	(Cost: 187) 	(Cost: 187)6-3-1--*--0--*-6-3-1- 	(Cost: 209) 	(Cost: 209)6-3-2-1--*--0--*-6-3-2-1- 	(Cost: 249) 	(Cost: 249)6-2-1--*--0--*-6-2-1- 	(Cost: 249) 	(Cost: 249)6-4-1--*--0--*-6-4-1- 	(Cost: 260) 	(Cost: 260)6-4-2-1--*--0--*-6-4-2-1- 	(Cost: 266) 	(Cost: 266)6-5-1--*--0--*-6-5-1- 	(Cost: 389) 	(Cost: 389)6-4-3-1--*--0--*-6-4-3-1- 	(Cost: 394) 	(Cost: 394)6-4-3-2-1--*--0--*-6-4-3-2-1- 	(Cost: 434) 	(Cost: 434)6-5-7-1--*--0--*-6-5-7-1- 	(Cost: 440) 	(Cost: 440)7-1--*--0--*-7-1- 	(Cost: 40) 	(Cost: 40)7-2-1--*--0--*-7-2-1- 	(Cost: 86) 	(Cost: 86)7-4-1--*--0--*-7-4-1- 	(Cost: 87) 	(Cost: 87)7-4-2-1--*--0--*-7-4-2-1- 	(Cost: 93) 	(Cost: 93)7-3-1--*--0--*-7-3-1- 	(Cost: 183) 	(Cost: 183)7-4-3-1--*--0--*-7-4-3-1- 	(Cost: 221) 	(Cost: 221)7-3-2-1--*--0--*-7-3-2-1- 	(Cost: 223) 	(Cost: 223)7-4-3-2-1--*--0--*-7-4-3-2-1- 	(Cost: 261) 	(Cost: 261)7-6-1--*--0--*-7-6-1- 	(Cost: 385) 	(Cost: 385)7-6-3-1--*--0--*-7-6-3-1- 	(Cost: 407) 	(Cost: 407)Delay : 40 -> Destination : 7
+Delay : 51 -> Destination : 4
+Delay : 55 -> Destination : 2
+Delay : 57 -> Destination : 4
+Delay : 86 -> Destination : 7
+Delay : 87 -> Destination : 7
+Delay : 93 -> Destination : 7
+Delay : 104 -> Destination : 3
+Delay : 144 -> Destination : 3
+Delay : 183 -> Destination : 7
+Delay : 185 -> Destination : 4
+Delay : 187 -> Destination : 6
+Delay : 209 -> Destination : 6
+Delay : 221 -> Destination : 7
+Delay : 223 -> Destination : 7
+Delay : 225 -> Destination : 4
+Delay : 249 -> Destination : 6
+Delay : 249 -> Destination : 6
+Delay : 259 -> Destination : 5
+Delay : 260 -> Destination : 6
+Delay : 261 -> Destination : 7
+Delay : 266 -> Destination : 6
+Delay : 310 -> Destination : 5
+Delay : 319 -> Destination : 5
+Delay : 325 -> Destination : 5
+Delay : 342 -> Destination : 5
+Delay : 344 -> Destination : 5
+Delay : 356 -> Destination : 5
+Delay : 357 -> Destination : 5
+Delay : 363 -> Destination : 5
+Delay : 384 -> Destination : 5
+Delay : 385 -> Destination : 7
+Delay : 389 -> Destination : 6
+Delay : 394 -> Destination : 6
+Delay : 407 -> Destination : 7
+Delay : 434 -> Destination : 6
+Delay : 440 -> Destination : 6
+
+ l is 3
+
+ number of chains: 3
+ The Chain with Minimum MVC is (2) with MVC 204
+ The Delays are :
+Delay : 55 ---- > Destination 2
+Delay : 57 ---- > Destination 4
+Delay : 86 ---- > Destination 7
+Delay : 104 ---- > Destination 3
+Delay : 187 ---- > Destination 6
+Delay : 259 ---- > Destination 5
+
+ Delay : 259
