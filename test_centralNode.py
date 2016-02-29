@@ -18,7 +18,7 @@ class TestCentralNode(unittest.TestCase):
         for i in range(10):
             msg += struct.pack('i', i)
 
-        sock.sendto(msg, ('localhost',CentralNode.PORT))
+        sock.sendto(msg, ('128.42.142.45',CentralNode.PORT))
 
         data = sock.recv(1024)
 
