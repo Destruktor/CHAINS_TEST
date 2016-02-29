@@ -6,17 +6,13 @@ import subprocess
 
 class Chains(object):
 
-    def __init__(self, graph_file_path, number_of_shortest_paths):
-        self._executable_path = "./kshort/HREA "
-        self._graph_file_path = graph_file_path
-        self._k = number_of_shortest_paths
-        self._paths = []
+    _executable_path = './kshort/HREA.c'
+    _input_file_path_prefix = './kshort/graph_file'
 
-    def get_paths(self):
-        return self._paths
-
-    def generate_paths_from_graph(self, latency_map, node_manager):
-        cmd = self._get_command_string(latency_map.nodemapping_length())
+    @staticmethod
+    def run_chains(self, k, number_of_destinations, graph_file_path):
+        final_paths = dict()
+        cmd = self.get_command_string(k, number_of_destinations, graph_file_path)
         chains_output = subprocess.Popen([cmd], stdout=subprocess.PIPE, shell=True).communicate()[0]
 
         re_match_paths = "(?:-\d+)+-\s+\(Cost:\s\d+\)"
@@ -48,13 +44,31 @@ class Chains(object):
 
         # get final list of paths
         for pair in dest_node_delay_pairs:
-            self._paths.append(node_path_map[pair[0]][pair[1]])
+            final_paths.append(node_path_map[pair[0]][pair[1]])
         print '\nFinal paths'
         print self._paths
+        return final_paths
 
+    @staticmethod
+    def write_chains_input_file(self, n, m, broadcast_node_id, destination_ids, latency_map):
+        file_name = self._input_file_path_prefix + str(broadcast_node_id)
+        f = open(file_name, 'w')
 
-    def _get_command_string(self, number_of_nodes):
-        return ' '.join((self._executable_path, self._graph_file_path, str(self._k), "-paths -tdijkstra", str(number_of_nodes)))
+        f.write("n %d\n"% n)
+        f.write("m %d\n"% m)
+        f.write("s %d\n"% broadcast_node_id)
+        f.write("t")
+        for i in destination_ids:
+            f.write(" %d"% i)
+        f.write("\n")
+        f.write(latency_map.get_formatted_latency_data())
+        f.close()
+        return file_name
+
+    def _get_command_string(self, k, number_of_destinations, graph_file_path):
+        return ' '.join(
+            [self._executable_path, graph_file_path, str(k), "-paths -tdijkstra", str(number_of_destinations)]
+        )
 
 
 class MulticastForwardingTable(object):
@@ -62,8 +76,13 @@ class MulticastForwardingTable(object):
     def __init__(self):
         pass
 
+    def build_MFT(self, path_list):
+        head = self._build_tree(path_list)
+        table = self._build_table(head)
+        return table
+
     def _build_tree(self, path_list):
-        head = Node()
+        head = MFTNode()
         for path in path_list:
             destination = int(path[0])
             curr_node = head
@@ -74,12 +93,12 @@ class MulticastForwardingTable(object):
                         curr_node.dest += (destination,)
                         break
                 else:
-                    temp = Node(n_id=node_id, n_dest=(destination,), n_parent=curr_node)
+                    temp = MFTNode(n_id=node_id, n_dest=(destination,), n_parent=curr_node)
                     curr_node.children += (temp,)
                     curr_node = temp
         return head
 
-    def build_table(self, head):
+    def _build_table(self, head):
         forwarding_table = dict()
         for node in self._walk(head.children[0]):
             # build dictionary of form
@@ -103,7 +122,7 @@ class MulticastForwardingTable(object):
                 yield n_n
 
 
-class Node(object):
+class MFTNode(object):
     def __init__(self, n_id=None, n_dest=None, n_parent=None):
         self.id = n_id  # Node id
         if n_dest is None:
