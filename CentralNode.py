@@ -101,9 +101,7 @@ class CentralNode(object):
             control_bit = bytes[0]
 
             if control_bit == '0':#init session
-                # what data do we need
-                # broadcast node, set of destinations
-
+                print "Got packet with control bit 0"
                 #broadcast_node_id = socket.inet_ntoa(bytes[1:5])
                 broadcast_node_id = struct.unpack('i', bytes[1:5])
                 broad_node_socket = bytes
