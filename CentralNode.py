@@ -57,7 +57,7 @@ class CentralNode(object):
         t_server.setDaemon(True)
         t_server.start()
 
-    def _init_session(self, broadcast_node_id, destination_node_ids, latency_map):
+    def _init_session(self, broadcast_node_id, destination_node_ids):
         # create time data structure
         self._time_data_final[broadcast_node_id] = dict()
         for node_id in destination_node_ids:
@@ -97,6 +97,7 @@ class CentralNode(object):
             packet = self._packet_queue.get(block=True)
             bytes = packet[0]
             addr = packet[1]
+            print 'Packet Received from: %s' % (addr)
 
             control_bit = bytes[0]
 

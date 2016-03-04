@@ -4,7 +4,7 @@ import subprocess
 
 class Chains(object):
 
-    _executable_path = './kshort/HREA.c'
+    _executable_path = './kshort/HREA'
 
     @staticmethod
     def run_chains(self, k, number_of_destinations, graph_file_path):
