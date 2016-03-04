@@ -104,7 +104,7 @@ class CentralNode(object):
             if control_bit == '0':#init session
                 print "Got packet with control bit 0"
                 #broadcast_node_id = socket.inet_ntoa(bytes[1:5])
-                broadcast_node_id = struct.unpack('i', bytes[1:5])
+                broadcast_node_id = struct.unpack('i', bytes[1:5])[0]
                 broad_node_socket = bytes
                 destination_node_ids = []
                 temp_len = len(bytes)#will this work maybe?????
