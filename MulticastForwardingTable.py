@@ -10,9 +10,9 @@ class Chains(object):
     _input_file_path_prefix = './kshort/graph_file'
 
     @staticmethod
-    def run_chains(self, k, number_of_destinations, graph_file_path):
+    def run_chains(k, number_of_destinations, graph_file_path):
         final_paths = dict()
-        cmd = self.get_command_string(k, number_of_destinations, graph_file_path)
+        cmd = Chains.get_command_string(k, number_of_destinations, graph_file_path)
         chains_output = subprocess.Popen([cmd], stdout=subprocess.PIPE, shell=True).communicate()[0]
 
         re_match_paths = "(?:-\d+)+-\s+\(Cost:\s\d+\)"
@@ -46,12 +46,12 @@ class Chains(object):
         for pair in dest_node_delay_pairs:
             final_paths.append(node_path_map[pair[0]][pair[1]])
         print '\nFinal paths'
-        print self._paths
+        #print self._paths
         return final_paths
 
     @staticmethod
-    def write_chains_input_file(self, n, m, broadcast_node_id, destination_ids, latency_map):
-        file_name = self._input_file_path_prefix + str(broadcast_node_id)
+    def write_chains_input_file(n, m, broadcast_node_id, destination_ids, latency_map):
+        file_name = Chains._input_file_path_prefix + str(broadcast_node_id)
         f = open(file_name, 'w')
 
         f.write("n %d\n"% n)
