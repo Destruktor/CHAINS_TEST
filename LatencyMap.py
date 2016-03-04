@@ -110,3 +110,6 @@ class LatencyMap(object):
         for line in self._latency_table:
             arc_count += 1
         return arc_count
+
+    def isValid(self):
+        return True

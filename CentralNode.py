@@ -72,7 +72,7 @@ class CentralNode(object):
         n = len(destination_node_ids)+1
         m = arc_count - 1
 
-        file_name = Chains.write_chains_input_file(n, m, broadcast_node_id, destination_node_ids, latency_map)
+        file_name = Chains.write_chains_input_file(n, m, broadcast_node_id, destination_node_ids, self._latency_map)
 
         # get chains output
         chains_output_paths = Chains.run_chains(100, n, file_name)
