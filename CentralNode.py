@@ -97,7 +97,7 @@ class CentralNode(object):
             packet = self._packet_queue.get(block=True)
             bytes = packet[0]
             addr = packet[1]
-            print 'Packet Received from: %s' % (addr)
+            print 'Packet Received from: %s:%d' % addr
 
             control_bit = bytes[0]
 
