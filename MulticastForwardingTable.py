@@ -12,7 +12,7 @@ class Chains(object):
     @staticmethod
     def run_chains(k, number_of_destinations, graph_file_path):
         final_paths = dict()
-        cmd = Chains.get_command_string(k, number_of_destinations, graph_file_path)
+        cmd = Chains._get_command_string(k, number_of_destinations, graph_file_path)
         chains_output = subprocess.Popen([cmd], stdout=subprocess.PIPE, shell=True).communicate()[0]
 
         re_match_paths = "(?:-\d+)+-\s+\(Cost:\s\d+\)"
@@ -65,9 +65,10 @@ class Chains(object):
         f.close()
         return file_name
 
-    def _get_command_string(self, k, number_of_destinations, graph_file_path):
+    @staticmethod
+    def _get_command_string(k, number_of_destinations, graph_file_path):
         return ' '.join(
-            [self._executable_path, graph_file_path, str(k), "-paths -tdijkstra", str(number_of_destinations)]
+            [Chains._executable_path, graph_file_path, str(k), "-paths -tdijkstra", str(number_of_destinations)]
         )
 
 
