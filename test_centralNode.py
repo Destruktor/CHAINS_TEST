@@ -10,18 +10,14 @@ class TestCentralNode(unittest.TestCase):
         self.fail()
 
     def test__process_packet(self):
-        cn = CentralNode()
 
-        sock = self._setup_socket()
-
-        msg = '0'
-        for i in range(10):
-            msg += struct.pack('i', i)
-
-        sock.sendto(msg, ('128.42.142.45',CentralNode.PORT))
-
-        data = sock.recv(1024)
-
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        msg = '0' + struct.pack('i', 1)
+        for i in range(5):
+            msg += struct.pack('i', i+2)
+            sock.sendto(msg, ('128.42.142.45',50006))
+            data = sock.recv(64)
+            print data
 
         self.fail()
 
