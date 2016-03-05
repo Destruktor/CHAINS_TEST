@@ -77,12 +77,14 @@ class MulticastForwardingTable(object):
     def __init__(self):
         pass
 
-    def build_MFT(self, path_list):
-        head = self._build_tree(path_list)
-        table = self._build_table(head)
+    @staticmethod
+    def build_MFT(path_list):
+        head = MulticastForwardingTable._build_tree(path_list)
+        table = MulticastForwardingTable._build_table(head)
         return table
 
-    def _build_tree(self, path_list):
+    @staticmethod
+    def _build_tree(path_list):
         head = MFTNode()
         for path in path_list:
             destination = int(path[0])
@@ -99,9 +101,10 @@ class MulticastForwardingTable(object):
                     curr_node = temp
         return head
 
-    def _build_table(self, head):
+    @staticmethod
+    def _build_table(head):
         forwarding_table = dict()
-        for node in self._walk(head.children[0]):
+        for node in MulticastForwardingTable._walk(head.children[0]):
             # build dictionary of form
             # {node: ((destinations), next_hop)
             if node.id not in forwarding_table:
@@ -114,12 +117,13 @@ class MulticastForwardingTable(object):
                 forwarding_table[node.id][node.dest[0]] += ((c_node.id, c_node.dest[0]),)
         return forwarding_table
 
-    def _walk(self, n):
+    @staticmethod
+    def _walk(n):
         # Based on: http://stackoverflow.com/a/3010038/2825538
         # iterate tree in pre-order depth-first search order
         yield n
         for c in n.children:
-            for n_n in self._walk(c):
+            for n_n in MulticastForwardingTable._walk(c):
                 yield n_n
 
 
