@@ -6,7 +6,7 @@ import subprocess
 
 class Chains(object):
 
-    _executable_path = './kshort/HREA.c'
+    _executable_path = './kshort/HREA'
     _input_file_path_prefix = './kshort/graph_file'
 
     @staticmethod
