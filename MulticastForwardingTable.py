@@ -13,8 +13,10 @@ class Chains(object):
     def run_chains(k, number_of_destinations, graph_file_path):
         final_paths = dict()
         cmd = Chains._get_command_string(k, number_of_destinations, graph_file_path)
+        print "Running CHAINS: " + cmd
         chains_output = subprocess.Popen([cmd], stdout=subprocess.PIPE, shell=True).communicate()[0]
-
+        print chains_output
+        
         re_match_paths = "(?:-\d+)+-\s+\(Cost:\s\d+\)"
         chains_output_filtered_paths = re.findall(re_match_paths, chains_output)
 
