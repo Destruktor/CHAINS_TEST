@@ -1,11 +1,11 @@
-from unittest import TestCase
+import unittest
 import socket
 import xml.etree.cElementTree as et
 
 __author__ = 'no295d'
 
 
-class TestNodeServer(TestCase):
+class TestNodeServer(unittest.TestCase):
     def test__test_application(self):
         self.fail()
 
@@ -39,3 +39,6 @@ class TestNodeServer(TestCase):
 
         xml_table = et.tostring(table)
         return xml_table
+
+if __name__=='__main__':
+    unittest.main()

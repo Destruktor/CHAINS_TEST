@@ -30,5 +30,6 @@ class TestCentralNode(unittest.TestCase):
     def _setup_socket(self):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         return sock
+
 if __name__=='__main__':
     unittest.main()
