@@ -18,6 +18,8 @@ class TestNodeServer(TestCase):
         msg='0'+table_as_xml
 
         sock.sendto(msg, ('128.42.142.45',50007))
+        data = sock.recv(64)
+        print data
 
     def test__update_table(self):
         self.fail()

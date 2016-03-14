@@ -154,12 +154,12 @@ class NodeServer(object):
 
             return delta
 
-        delta_t_1 = sync_helper()
+        #delta_t_1 = sync_helper()
         delta_t_2 = 1000000.0
-        while(abs(delta_t_2-delta_t_1)>0.001):
-            delta_t_2 = delta_t_1
-            delta_t_1 = sync_helper()
-        return delta_t_1
+        #while(abs(delta_t_2-delta_t_1)>0.001):
+        #    delta_t_2 = delta_t_1
+        #    delta_t_1 = sync_helper()
+        return 0.0#delta_t_1
 
     def _process_packet(self):
         global time_data
