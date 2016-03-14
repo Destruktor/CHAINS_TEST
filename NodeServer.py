@@ -17,7 +17,7 @@ class NodeServer(object):
 
     TS_ADDR = '192.12.33.102'
     TS_PORT = 50008
-    HOST = ''                 # Symbolic name meaning all available interfaces
+    _HOST = ''                 # Symbolic name meaning all available interfaces
     PORT = 50007              # Arbitrary non-privileged port
     APP_PORT = 50009
     NUM_BROADCAST_THREADS = 100
@@ -484,12 +484,12 @@ class NodeServer(object):
         logging.info('Node ip: ' + self._this_node_id)
         logging.info('Socket Created. Initializing...')
         try:
-            s.bind((self._HOST, self._PORT))
+            s.bind((self._HOST, self.PORT))
         except socket.error, msg:
             logging.error('Bind failed. Error code: ' +str(msg[0]) + ', Error message : ' + msg[1])
             sys.exit();
 
-        print 'Socket bound on port: ' + str(self._PORT)
+        print 'Socket bound on port: ' + str(self.PORT)
 
         #hang out and listen for stuffs
         while 1:
