@@ -28,10 +28,10 @@ class TestNodeServer(unittest.TestCase):
         self.fail()
 
     def build_mft(self):
-        mft = [(2, 2), (3, 5), (5, 3)]
+        mft = [('2', '2'), ('3', '5'), ('5', '3')]
         table = et.Element('table')
         source_node = et.SubElement(table, 'source_node')
-        source_node.attrib['broadcast_node'] = 1
+        source_node.attrib['broadcast_node'] = '1'
         for dest, next_hop in mft:
             temp_node = et.SubElement(source_node, "destination_node")
             temp_node.attrib['next_hop'] = next_hop
