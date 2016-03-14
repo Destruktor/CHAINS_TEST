@@ -73,7 +73,7 @@ class NodeServer(object):
         # listen for packets
         # write the data
         try:
-            sync_sock.bind(('', self._APP_PORT))
+            sync_sock.bind(('', self.APP_PORT))
         except socket.error, msg:
             print 'Bind failed. Error code: ' + str(msg[0]) + ', Error message : ' + msg[1]
             return
@@ -207,10 +207,10 @@ class NodeServer(object):
 
                 for dest in dest_ip:
                     if dest[0] == self._this_node_id:
-                        dest_port = self._APP_PORT
+                        dest_port = self.APP_PORT
                         logging.debug( "Received Message bound for this node. Forwarding to application..." )
                     else:
-                        dest_port = self._PORT
+                        dest_port = self.PORT
                     new_msg = '1'+socket.inet_aton(broadcast_node_id)+socket.inet_aton(dest[1])+struct.pack('d',msg)
                     broad_sock.sendto(new_msg, (dest[0], dest_port))
 
@@ -282,7 +282,7 @@ class NodeServer(object):
 
                 for temp_node in temp_node_list:
                     logging.debug("Sending packet to: %s", temp_node)
-                    temp_addr = (temp_node, self._PORT)
+                    temp_addr = (temp_node, self.PORT)
                     #send ten packets
                     delay = 0.0
                     broad_sock.settimeout(2)
@@ -351,10 +351,10 @@ class NodeServer(object):
 
                 for dest in dest_ip:
                     if dest[0] == self._this_node_id:
-                        dest_port = self._APP_PORT
+                        dest_port = self.APP_PORT
                         logging.debug( "Received Message bound for this node. Forwarding to application..." )
                     else:
-                        dest_port = self._PORT
+                        dest_port = self.PORT
                     temp_msg = '6'+socket.inet_aton(broadcast_node_id)+socket.inet_aton(dest[1])+new_msg
                     broad_sock.sendto(temp_msg, (dest[0], dest_port))
 
@@ -411,7 +411,7 @@ class NodeServer(object):
 
                 for temp_node in temp_node_list:
                     logging.debug("Sending packet to: %s", temp_node)
-                    temp_addr = (temp_node, self._PORT)
+                    temp_addr = (temp_node, self.PORT)
                     #send ten packets
                     delay = 0.0
                     broad_sock.settimeout(2)
