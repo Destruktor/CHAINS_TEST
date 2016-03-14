@@ -2,6 +2,7 @@
 
 import re
 import subprocess
+import xml.etree.cElementTree as et
 
 
 class Chains(object):
@@ -16,7 +17,7 @@ class Chains(object):
         print "Running CHAINS: " + cmd
         chains_output = subprocess.Popen([cmd], stdout=subprocess.PIPE, shell=True).communicate()[0]
         print chains_output
-        
+
         re_match_paths = "(?:-\d+)+-\s+\(Cost:\s\d+\)"
         chains_output_filtered_paths = re.findall(re_match_paths, chains_output)
 

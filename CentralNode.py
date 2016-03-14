@@ -294,13 +294,13 @@ class CentralNode(object):
 
             self._packet_queue.put((data, addr))
 
-    def update_node_multicast_forwarding_table(self, node_id, table):
+    def update_node_multicast_forwarding_table(self, node_id, mft_dict):
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
         table = et.Element('table')
         source_node = et.SubElement(table, 'source_node')
-        source_node.attrib['broadcast_node'] = node_mapping[1][1]
-        for pair in table:
+        source_node.attrib['broadcast_node'] = node_mapping[1][1]#this wont work
+        for pair in mft_dict:
             temp_node = et.SubElement(source_node, "destination_node")
             temp_node.attrib['next_hop'] = pair[1]
             temp_node.text = pair[0]#should capture ips for each node
