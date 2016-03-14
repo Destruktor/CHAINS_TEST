@@ -28,7 +28,7 @@ class TestNodeServer(unittest.TestCase):
         self.fail()
 
     def build_mft(self):
-        mft = [('2', '2'), ('3', '5'), ('5', '3')]
+        mft = {'2':('2', '2'), '5':('3', '5'), '3':('5', '3')}
         table = et.Element('table')
         source_node = et.SubElement(table, 'source_node')
         source_node.attrib['broadcast_node'] = '1'
