@@ -32,10 +32,12 @@ class TestNodeServer(unittest.TestCase):
         table = et.Element('table')
         source_node = et.SubElement(table, 'source_node')
         source_node.attrib['broadcast_node'] = '1'
-        for dest, next_hop in mft:
-            temp_node = et.SubElement(source_node, "destination_node")
-            temp_node.attrib['next_hop'] = next_hop
-            temp_node.text = dest
+        for key, value in mft:
+            temp_node = et.SubElement(source_node, )
+            for next_hop, dest in mft:
+                temp_node = et.SubElement(source_node, "destination_node")
+                temp_node.attrib['next_hop'] = next_hop
+                temp_node.text = dest
 
         xml_table = et.tostring(table)
         return xml_table
