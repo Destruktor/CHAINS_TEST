@@ -42,7 +42,7 @@ class TestNodeServer(unittest.TestCase):
         #         temp_node.text = dest
         #
         # xml_table = et.tostring(table)
-        # return xml_table 
+        # return xml_table
 
         table = et.Element('table')
         source_node = et.SubElement(table, 'source_node')

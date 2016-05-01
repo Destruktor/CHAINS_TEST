@@ -178,7 +178,7 @@ class NodeServer(object):
             broad_sock.settimeout(None)
             bytes, addr, t_received = self._packet_queue.get(block=True)
             control_bit = bytes[0]
-            logging.info( 'Message recieved with control bit: ' + control_bit )
+            print 'Message recieved with control bit: ' + control_bit
             #branch on control bit
             if control_bit == '0':
                 #do stuff for updatring table
@@ -487,14 +487,14 @@ class NodeServer(object):
             s.bind((self._HOST, self.PORT))
         except socket.error, msg:
             logging.error('Bind failed. Error code: ' +str(msg[0]) + ', Error message : ' + msg[1])
-            sys.exit();
+            sys.exit()
 
         print 'Socket bound on port: ' + str(self.PORT)
 
         #hang out and listen for stuffs
         while 1:
             data, addr = s.recvfrom(4096)
-            logging.info( 'Connected with' + addr[0] + str(addr[1]))
+            print 'Connected with' + addr[0] + str(addr[1])
             #process data
             #temp_tread = Thread(target=process_packet, args=(data, addr))
             #temp_tread.st()
