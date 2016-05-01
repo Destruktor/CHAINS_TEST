@@ -496,7 +496,7 @@ class NodeServer(object):
         print 'Socket bound on port: ' + str(self.PORT)
 
         #hang out and listen for stuffs
-        while 1:
+        while True:
             data, addr = s.recvfrom(4096)
             print 'Connected with' + addr[0] + str(addr[1])
             #process data
