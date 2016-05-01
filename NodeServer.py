@@ -506,6 +506,7 @@ class NodeServer(object):
             if data[0]=='4':
                 sys.exit()
             self._packet_queue.put((data, addr, t_received))
+        print 'SHould not get here!!'
 
 if __name__=='__main__':
     n_node = NodeServer()
