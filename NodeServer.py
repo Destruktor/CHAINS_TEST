@@ -72,11 +72,14 @@ class NodeServer(object):
         # test appliaction thread will mimic a real application
         # listen for packets
         # write the data
+        print 'Starting test application. Trying to bind port...'
         try:
             sync_sock.bind(('', self.APP_PORT))
         except socket.error, msg:
             print 'Bind failed. Error code: ' + str(msg[0]) + ', Error message : ' + msg[1]
             return
+
+        print 'Starting test application. Socket bound.'
         while 1 :
             app_data, app_addr = sync_sock.recvfrom(1024)
 
@@ -153,7 +156,7 @@ class NodeServer(object):
             sync_sock.close()
 
             return delta
-
+        print 'Mocking sync function'
         #delta_t_1 = sync_helper()
         delta_t_2 = 1000000.0
         #while(abs(delta_t_2-delta_t_1)>0.001):
@@ -163,6 +166,7 @@ class NodeServer(object):
 
     def _process_packet(self):
         global time_data
+        print 'Starting to process incoming packets'
         # structure of packet
         # |------------------------------------------------
         # | Function     | Control Bit | Data
