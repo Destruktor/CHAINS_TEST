@@ -299,11 +299,14 @@ class CentralNode(object):
 
         table = et.Element('table')
         source_node = et.SubElement(table, 'source_node')
-        source_node.attrib['broadcast_node'] = node_mapping[1][1]#this wont work
-        for pair in mft_dict:
-            temp_node = et.SubElement(source_node, "destination_node")
-            temp_node.attrib['next_hop'] = pair[1]
-            temp_node.text = pair[0]#should capture ips for each node
+        source_node.attrib['broadcast_node'] = self._node_manager.get_node_addr_by_id(node_id)
+        for incoming_dest, values in mft_dict:
+            temp_node = et.SubElement(source_node, "routing_table_entry")
+            temp_node.attrib['incoming_dest'] = incoming_dest
+            for next_hop, outgoing_dest in values:
+                temp_node2 = et.SubElement(temp_node, 'next_hop')
+                temp_node2.attrib['dest']=outgoing_dest
+                temp_node2.attrib['next_hop']=next_hop
 
         xml_table = et.tostring(table)
         node_addr = self._node_manager.get_node_addr_by_id(node_id)

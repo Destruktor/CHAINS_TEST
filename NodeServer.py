@@ -66,7 +66,6 @@ class NodeServer(object):
         t_server.start()
 
     def _test_application(self):
-        global time_data
         sync_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
         # test appliaction thread will mimic a real application
@@ -96,10 +95,10 @@ class NodeServer(object):
 
                 logging.debug( app_addr )
                 logging.debug( app_data )
-                if broadcast_node_id not in time_data:
-                    time_data[broadcast_node_id] = []
+                if broadcast_node_id not in self._time_data:
+                    self._time_data[broadcast_node_id] = []
 
-                time_data[broadcast_node_id].append((msg, t))
+                self._time_data[broadcast_node_id].append((msg, t))
                 logging.info( 'Message received... @%f: %f' % (t, msg))
             elif control_bit == '6':
                 # control_bit|broadcast_node_id|destination_node_id|hop_count|source_offset|source_transmit|hop_1|hop_1_time_offset|hop_1_receive|hop_1_transmit....
@@ -123,7 +122,7 @@ class NodeServer(object):
                     debug_time_data[temp_node_ip]=(temp_node_time_offset,temp_node_receive_time,temp_node_transmit_time,i+1)
                 debug_time_data['destination'] = (self._delta_t,t,0,1000000)
 
-                time_data[broadcast_node_id].append(debug_time_data)
+                self._time_data[broadcast_node_id].append(debug_time_data)
 
         sync_sock.close()
 
@@ -165,7 +164,6 @@ class NodeServer(object):
         return 0.0#delta_t_1
 
     def _process_packet(self):
-        global time_data
         print 'Starting to process incoming packets'
         # structure of packet
         # |------------------------------------------------
@@ -189,8 +187,8 @@ class NodeServer(object):
                 temp_bnode = self._update_table(bytes[1:])
                 logging.debug( self._table )
                 #add time_data entry for the broadcast node
-                if temp_bnode not in time_data:
-                    time_data[temp_bnode] = []
+                if temp_bnode not in self._time_data:
+                    self._time_data[temp_bnode] = []
 
             elif control_bit == '1':
                 #broadcast the data
@@ -254,7 +252,7 @@ class NodeServer(object):
                 goat = 3
                 #process data
                 #time_data[broadcast_node] = [(broad_time_float, recv_time_float), ...]
-                temp_float_list = [item for sublist in time_data[broadcast_node_id] for item in sublist]
+                temp_float_list = [item for sublist in self._time_data[broadcast_node_id] for item in sublist]
                 logging.info( "Time Data List: " )
                 logging.info( temp_float_list )
                 time_data_string = struct.pack(str(len(temp_float_list)) + 'd', *temp_float_list)
@@ -267,7 +265,7 @@ class NodeServer(object):
                 broad_sock.sendto(new_msg, (central_node_ip, central_node_port))
 
                 #delete time data
-                time_data[broadcast_node_id] = []
+                self._time_data[broadcast_node_id] = []
 
 
             elif control_bit == '4':
@@ -372,7 +370,7 @@ class NodeServer(object):
                 #process data
                 #time_data[broadcast_node] = [{'source':time, 'destination':time, node_ip:time...}, ...]
                 #  where time is a tuple (time_received, time_transmit)
-                temp_time_data = time_data[broadcast_node_id]
+                temp_time_data = self._time_data[broadcast_node_id]
                 #create xml representation
                 final_time_data= et.Element('final_time_data')
                 packet_number = 0
@@ -398,7 +396,7 @@ class NodeServer(object):
                 broad_sock.sendto('3' + xml_time_data, (central_node_ip, central_node_port))
 
                 #delete time data
-                time_data[broadcast_node_id] = []
+                self._time_data[broadcast_node_id] = []
 
             elif control_bit == '8':#experiment with alternate delay measurement
                 t_corrected = t_received + self._delta_t
